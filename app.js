@@ -9,6 +9,8 @@ let currentToken = null;
 let timer = null;
 let countdown = 0;
 
+const TOKEN_TTL_SECONDS = 15;
+
 const el = (id) => document.getElementById(id);
 const fmt = (n) => `${Number(n).toLocaleString('vi-VN')} VND`;
 const rand = (len) => Array.from({ length: len }, () => Math.floor(Math.random() * 16).toString(16)).join('').toUpperCase();
@@ -22,19 +24,42 @@ function showApp() {
   renderTx();
 }
 
-function renderBalance() { el('balanceText').textContent = fmt(currentStudent.balance); }
+function renderBalance() {
+  el('balanceText').textContent = fmt(currentStudent.balance);
+}
+
+function renderQRCode(payload) {
+  const qrBox = el('qrBox');
+  const encodedData = encodeURIComponent(payload);
+  const qrImageUrl = `https://api.qrserver.com/v1/create-qr-code/?size=220x220&margin=0&data=${encodedData}`;
+  qrBox.innerHTML = `
+    <img src="${qrImageUrl}" alt="Dynamic payment QR" class="qr-image" onerror="this.replaceWith(Object.assign(document.createElement('pre'),{className:'qr-fallback',textContent:${'`'}${payload}${'`'}}));" />
+    <small class="qr-hint">Scan this QR from merchant screen</small>
+  `;
+}
 
 function generateToken() {
+  const issuedAt = Date.now();
   currentToken = {
     token: rand(8),
     code: String(Math.floor(100000 + Math.random() * 900000)),
     userId: currentStudent.id,
-    expiresAt: Date.now() + 15000,
+    issuedAt,
+    expiresAt: issuedAt + TOKEN_TTL_SECONDS * 1000,
     used: false
   };
-  countdown = 15;
-  el('qrBox').textContent = JSON.stringify({ token: currentToken.token, userId: currentToken.userId, issuedAt: Date.now() });
+
+  countdown = TOKEN_TTL_SECONDS;
+  const payload = JSON.stringify({
+    token: currentToken.token,
+    userId: currentToken.userId,
+    issuedAt: currentToken.issuedAt
+  });
+
+  renderQRCode(payload);
   el('codeText').textContent = currentToken.code;
+  el('countText').textContent = `Refresh in ${countdown}s`;
+  el('countdownBar').style.width = '100%';
 }
 
 function startCountdown() {
@@ -42,7 +67,7 @@ function startCountdown() {
   timer = setInterval(() => {
     countdown = Math.max(0, countdown - 1);
     el('countText').textContent = `Refresh in ${countdown}s`;
-    el('countdownBar').style.width = `${(countdown / 15) * 100}%`;
+    el('countdownBar').style.width = `${(countdown / TOKEN_TTL_SECONDS) * 100}%`;
     if (countdown === 0) generateToken();
   }, 1000);
 }

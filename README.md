@@ -11,7 +11,7 @@ This guide is written for someone with **zero coding experience** and explains e
 - iPhone-style UI mockup
 - FTU red branding + logo
 - Student login
-- Wallet with rotating payment token (every ~15 seconds)
+- Wallet with a real scannable QR image (refreshes every ~15 seconds)
 - 6-digit fallback payment code (safer for live demo)
 - Merchant panel to charge wallet
 - Balance updates + transaction list
@@ -302,3 +302,8 @@ It is intentionally simplified and does **not** include:
 - real backend database
 
 For a real deployment, you would add secure backend APIs, encrypted token validation, user authentication infrastructure, and regulated payment provider integration.
+
+
+### Problem: QR image does not show
+- The QR image is generated from `api.qrserver.com`, so make sure your internet is connected.
+- If blocked by network, still use the 6-digit fallback code in the Wallet screen for demo.
