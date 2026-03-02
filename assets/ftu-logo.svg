@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 300" fill="none">
+  <circle cx="150" cy="150" r="145" fill="#C8102E" stroke="white" stroke-width="10"/>
+  <circle cx="150" cy="150" r="108" fill="none" stroke="white" stroke-width="8"/>
+  <text x="150" y="70" text-anchor="middle" fill="white" font-size="24" font-family="Arial" font-weight="700">FTU</text>
+  <text x="150" y="164" text-anchor="middle" fill="white" font-size="96" font-family="Arial" font-weight="700">FA</text>
+  <text x="150" y="248" text-anchor="middle" fill="white" font-size="20" font-family="Arial">FOREIGN TRADE UNIVERSITY</text>
+</svg>

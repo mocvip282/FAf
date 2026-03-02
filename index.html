@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+  <title>FA - FTU App Prototype</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <main class="page-bg">
+    <section class="iphone-frame">
+      <div id="loginScreen" class="login-card">
+        <img src="assets/ftu-logo.svg" class="logo" alt="FTU Logo" />
+        <h1>FA • FTU App</h1>
+        <p>Mobile Super App Prototype</p>
+        <input id="studentId" value="2312280041" placeholder="Student ID" />
+        <input id="studentPin" value="123456" type="password" placeholder="PIN" />
+        <button id="studentLoginBtn">Sign in Student</button>
+      </div>
+
+      <div id="appScreen" class="app-shell hidden">
+        <header>
+          <div class="user-pill" id="studentName">Student</div>
+          <button class="logout" id="logoutBtn">⎋</button>
+        </header>
+
+        <section id="homeTab">
+          <section class="balance-banner">
+            <p>Campus Wallet</p>
+            <h2 id="balanceText">0 VND</h2>
+            <span id="studentIdText"></span>
+          </section>
+          <section class="features-grid">
+            <button class="feature-btn red" data-open="walletTab">Wallet QR</button>
+            <button class="feature-btn orange">Pre-order</button>
+            <button class="feature-btn blue">Room Booking</button>
+            <button class="feature-btn purple">Parking</button>
+            <button class="feature-btn teal">Library</button>
+            <button class="feature-btn gray">ID Card</button>
+          </section>
+        </section>
+
+        <section id="walletTab" class="wallet-screen hidden">
+          <h3>Dynamic QR Payment</h3>
+          <div id="qrBox" class="qr-box"></div>
+          <div class="code" id="codeText">------</div>
+          <div class="countdown-wrap"><div id="countdownBar" class="countdown"></div></div>
+          <p id="countText">Refresh in 0s</p>
+          <button id="refreshBtn">Refresh now</button>
+          <h4>Recent transactions</h4>
+          <div id="txList" class="tx-list"></div>
+        </section>
+
+        <nav>
+          <button id="homeBtn" class="active">Home</button>
+          <button id="walletBtn">Wallet</button>
+        </nav>
+      </div>
+    </section>
+
+    <aside class="merchant-panel">
+      <h3>Merchant POS</h3>
+      <p>Demo merchant: <b>FTU Canteen A</b></p>
+      <label>Service</label>
+      <select id="serviceSelect">
+        <option value="canteen">Canteen</option>
+        <option value="parking">Parking</option>
+        <option value="coffee">Coffee</option>
+      </select>
+      <label>Amount (VND)</label>
+      <input id="amountInput" value="35000" />
+      <label>Enter token or 6-digit code</label>
+      <input id="tokenInput" placeholder="token / code" />
+      <button id="chargeBtn">Charge Student Wallet</button>
+      <p class="msg" id="merchantMsg">Waiting...</p>
+    </aside>
+  </main>
+  <script src="app.js"></script>
+</body>
+</html>
