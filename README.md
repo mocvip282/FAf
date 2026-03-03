@@ -84,6 +84,37 @@ Check:
 git --version
 ```
 
+
+### 2.4 Surface Laptop 7 (ARM) notes — important
+
+Great news: this project is a simple static web app, so it runs well on ARM Windows.
+
+What to do differently on **Surface Laptop 7 (Snapdragon / ARM64)**:
+
+1. **Install ARM64 versions when available**
+   - VS Code: use Windows ARM64 installer from official site.
+   - Python: prefer Windows ARM64 build from python.org.
+   - Git: current Windows Git installer usually works (native/emulated), both are fine for this project.
+
+2. **Commands are the same**
+   - You still run exactly:
+
+```bat
+python -m http.server 5173
+```
+
+3. **If one tool is x64-only, it can still run under emulation**
+   - Windows on ARM has Prism/x64 emulation, so beginner setup is still okay.
+
+4. **Browser recommendation on ARM**
+   - Edge (built-in) is perfect for demo and usually fastest on Surface ARM.
+
+5. **How to confirm you are on ARM Windows**
+   - Go to **Settings → System → About → System type**
+   - It should say ARM-based processor.
+
+Bottom line: for this FA prototype, your Surface Laptop 7 should run it with the **same workflow** as Intel laptops.
+
 ---
 
 ## 3) Download the project files
