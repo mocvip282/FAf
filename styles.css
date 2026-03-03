@@ -186,3 +186,5 @@ nav button.active { color: #be123c; }
 @media (max-width: 980px) {
   .merchant-panel { display: none; }
 }
+
+.secondary-btn { background: #0f766e; }

@@ -40,6 +40,7 @@ let transactions = [];
 let currentPayToken = null;
 let timer = null;
 let countdown = 0;
+let currentTopupAmount = 0;
 const TOKEN_TTL_SECONDS = 15;
 const screenHistory = [];
 
@@ -75,6 +76,9 @@ function showScreen(targetId, remember = true) {
   el('homeBtn').classList.toggle('active', targetId === 'homeScreen');
   if (remember) screenHistory.push(targetId);
   el('backBtn').classList.toggle('hidden', targetId === 'homeScreen');
+
+  if (targetId === 'receiveScreen' && currentStudent) generateTopupQr();
+  if (targetId === 'roomScreen' && currentStudent) renderRooms();
 }
 
 function goBack() {
@@ -121,18 +125,23 @@ function startTokenTimer() {
 
 function generateTopupQr() {
   const amount = Number(el('topupAmount').value || 0);
-  if (amount < 1000) return showBanner('Top-up amount must be at least 1,000 VND');
+  if (!Number.isFinite(amount) || amount < 1000) {
+    showBanner('Top-up amount must be at least 1,000 VND');
+    return;
+  }
+
+  currentTopupAmount = Math.floor(amount);
   const payload = JSON.stringify({
-    type: 'TOPUP',
+    type: 'RECEIVE',
     userId: currentStudent.id,
     studentId: currentStudent.studentId,
-    amount,
+    amount: currentTopupAmount,
     nonce: rand(6),
     ts: Date.now()
   });
   el('receiveQrBox').innerHTML = qrImage(payload, 'Scan with bank app (demo only)');
-  el('receiveText').textContent = `Top-up request: ${fmt(amount)} (demo QR)`;
-  showBanner(`New top-up QR generated for ${fmt(amount)}`);
+  el('receiveText').textContent = `Receive request: ${fmt(currentTopupAmount)} (demo QR)`;
+  showBanner(`New receive QR generated for ${fmt(currentTopupAmount)}`);
 }
 
 function chargeStudent(amount, service, source = 'merchant') {
@@ -142,6 +151,21 @@ function chargeStudent(amount, service, source = 'merchant') {
   renderBalance();
   renderTransactions();
   return true;
+}
+
+
+function confirmTopup() {
+  if (!currentTopupAmount) {
+    showBanner('Generate a receive QR first');
+    return;
+  }
+
+  currentStudent.balance += currentTopupAmount;
+  transactions.push({ userId: currentStudent.id, service: 'Top-up / Receive', amount: currentTopupAmount, source: 'topup', timestamp: Date.now() });
+  renderBalance();
+  renderTransactions();
+  showBanner(`Balance added: +${fmt(currentTopupAmount)}`);
+  generateTopupQr();
 }
 
 function renderMenu() {
@@ -264,6 +288,7 @@ el('refreshPayBtn').addEventListener('click', () => {
   showBanner('Pay QR refreshed');
 });
 el('generateTopupBtn').addEventListener('click', generateTopupQr);
+el('confirmTopupBtn').addEventListener('click', confirmTopup);
 
 el('chargeBtn').addEventListener('click', () => {
   if (!currentStudent) return alert('Login student first.');

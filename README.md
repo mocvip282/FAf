@@ -212,7 +212,7 @@ Use any demo account (all passwords are `1`), for example:
 ### Test steps
 
 1. Login as student
-2. On home, click **Wallet QR**
+2. On home, click **Wallet**
 3. Note the 6-digit code below the token box
 4. Open Wallet → Pay and copy the 6-digit code
 5. In right-side merchant panel:
@@ -339,3 +339,9 @@ For a real deployment, you would add secure backend APIs, encrypted token valida
 ### Problem: QR image does not show
 - The QR image is generated from `api.qrserver.com`, so make sure your internet is connected.
 - If blocked by network, still use the 6-digit fallback code in the Wallet screen for demo.
+
+
+### Receive screen (demo top-up)
+- Go to **Wallet → Receive**.
+- Enter amount and tap **Generate new top-up QR**.
+- Tap **I paid this QR (demo add balance)** to simulate successful bank transfer and add money to wallet balance.
