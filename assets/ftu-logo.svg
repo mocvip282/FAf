@@ -1,7 +1,28 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 300" fill="none">
-  <circle cx="150" cy="150" r="145" fill="#C8102E" stroke="white" stroke-width="10"/>
-  <circle cx="150" cy="150" r="108" fill="none" stroke="white" stroke-width="8"/>
-  <text x="150" y="70" text-anchor="middle" fill="white" font-size="24" font-family="Arial" font-weight="700">FTU</text>
-  <text x="150" y="164" text-anchor="middle" fill="white" font-size="96" font-family="Arial" font-weight="700">FA</text>
-  <text x="150" y="248" text-anchor="middle" fill="white" font-size="20" font-family="Arial">FOREIGN TRADE UNIVERSITY</text>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="FTU crest">
+  <defs>
+    <style>
+      .r{fill:#c6102e}.w{fill:#fff}
+      text{font-family:Arial,Helvetica,sans-serif;font-weight:700;letter-spacing:1px}
+    </style>
+    <path id="topArc" d="M64,256a192,192 0 1,1 384,0"/>
+    <path id="botArc" d="M448,256a192,192 0 1,1 -384,0"/>
+  </defs>
+  <circle class="r" cx="256" cy="256" r="252"/>
+  <circle class="w" cx="256" cy="256" r="226"/>
+  <circle class="r" cx="256" cy="256" r="214"/>
+  <circle class="w" cx="256" cy="256" r="178"/>
+  <circle class="r" cx="256" cy="256" r="170"/>
+
+  <text class="w" font-size="42">
+    <textPath href="#topArc" startOffset="50%" text-anchor="middle">TRƯỜNG ĐẠI HỌC NGOẠI THƯƠNG</textPath>
+  </text>
+  <text class="w" font-size="36">
+    <textPath href="#botArc" startOffset="50%" text-anchor="middle">FOREIGN TRADE UNIVERSITY</textPath>
+  </text>
+
+  <g class="w" transform="translate(162 162)">
+    <path d="M0 18h90v24H24v138H0z"/>
+    <path d="M80 52h108v24h-82v16h72v24h-72v44h-26z"/>
+    <path d="M188 92h26v70c0 22-18 40-40 40h-66c-22 0-40-18-40-40v-30h26v28c0 8 6 14 14 14h64c8 0 14-6 14-14z"/>
+  </g>
 </svg>
