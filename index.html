@@ -25,30 +25,32 @@
         <header>
           <button class="ghost-btn" id="backBtn">‹</button>
           <div class="user-pill" id="studentName">Student</div>
-          <button class="logout" id="logoutBtn">⎋</button>
+          <button class="logout" id="logoutBtn" title="Logout" aria-label="Logout">⏻</button>
         </header>
 
         <section id="homeScreen" class="screen">
-          <img src="assets/ftu-logo.svg" class="home-watermark" alt="FTU watermark" />
           <section class="balance-banner">
             <p>Campus Wallet</p>
             <h2 id="balanceText">0 VND</h2>
             <span id="studentIdText"></span>
           </section>
           <section class="features-grid">
-            <button class="feature-btn red" data-target="walletHubScreen"><span class="icon">👛</span><span>Wallet</span></button>
-            <button class="feature-btn orange" data-target="preOrderScreen"><span class="icon">☕</span><span>Pre-order</span></button>
-            <button class="feature-btn blue" data-target="roomScreen"><span class="icon">🏫</span><span>Room Booking</span></button>
-            <button class="feature-btn teal" data-target="libraryScreen"><span class="icon">📖</span><span>Library</span></button>
-            <button class="feature-btn gray" data-target="idCardScreen"><span class="icon">🪪</span><span>ID Card</span></button>
+            <button class="feature-btn minimal" data-target="walletHubScreen" title="Wallet" aria-label="Wallet"><span class="icon">👛</span></button>
+            <button class="feature-btn minimal" data-target="preOrderScreen" title="Pre-order" aria-label="Pre-order"><span class="icon">☕</span></button>
+            <button class="feature-btn minimal" data-target="roomScreen" title="Room booking" aria-label="Room booking"><span class="icon">🏫</span></button>
+            <button class="feature-btn minimal" data-target="libraryScreen" title="Library" aria-label="Library"><span class="icon">📖</span></button>
+            <button class="feature-btn minimal" data-target="idCardScreen" title="ID Card" aria-label="ID Card"><span class="icon">🪪</span></button>
+          </section>
+          <section class="features-labels">
+            <span>Wallet</span><span>Pre-order</span><span>Room</span><span>Library</span><span>ID</span>
           </section>
         </section>
 
         <section id="walletHubScreen" class="screen hidden">
           <h3>Wallet</h3>
           <div class="wallet-actions">
-            <button class="feature-btn red" data-target="payScreen"><span class="icon">💸</span><span>Pay</span></button>
-            <button class="feature-btn teal" data-target="receiveScreen"><span class="icon">📥</span><span>Receive</span></button>
+            <button class="feature-btn minimal" data-target="payScreen"><span class="icon">💸</span><span>Pay</span></button>
+            <button class="feature-btn minimal" data-target="receiveScreen"><span class="icon">📥</span><span>Receive</span></button>
           </div>
         </section>
 
@@ -64,7 +66,7 @@
         </section>
 
         <section id="receiveScreen" class="screen hidden">
-          <h3>Receive / Top up</h3>
+          <h3>Receive</h3>
           <label>Top-up amount (VND)</label>
           <input id="topupAmount" type="number" value="100000" min="1000" step="1000" />
           <div id="receiveQrBox" class="qr-box"></div>
