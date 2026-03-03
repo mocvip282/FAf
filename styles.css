@@ -84,16 +84,24 @@ header { padding: 10px 16px; display: grid; grid-template-columns: 34px 1fr 34px
 #homeScreen {
   position: relative;
   overflow: hidden;
-  background-image: url('assets/ftu-seal.svg');
-  background-repeat: no-repeat;
-  background-position: center center;
-  background-size: 92% auto;
 }
 #homeScreen::before {
   content: '';
   position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 125%;
+  aspect-ratio: 1 / 1;
+  transform: translate(-50%, -50%);
+  background: url('assets/ftu-seal.svg') center center / contain no-repeat;
+  opacity: 0.14;
+  pointer-events: none;
+}
+#homeScreen::after {
+  content: '';
+  position: absolute;
   inset: 0;
-  background: rgba(255, 255, 255, 0.80);
+  background: rgba(255, 255, 255, 0.82);
   pointer-events: none;
 }
 #homeScreen > * { position: relative; z-index: 1; }

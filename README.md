@@ -320,7 +320,8 @@ http://localhost:8080
 - `index.html` → app layout / UI structure
 - `styles.css` → colors, spacing, iPhone-like design
 - `app.js` → login + wallet logic + token + merchant charge
-- `assets/ftu-logo.svg` → FTU logo used in app
+- `assets/ftu-logo.svg` → legacy FTU logo
+- `assets/ftu-seal.svg` → current FTU seal logo used on login and menu watermark
 
 ---
 
@@ -345,3 +346,25 @@ For a real deployment, you would add secure backend APIs, encrypted token valida
 - Go to **Wallet → Receive**.
 - Enter amount and tap **Generate new top-up QR**.
 - Tap **I paid this QR (demo add balance)** to simulate successful bank transfer and add money to wallet balance.
+
+
+## 13) How to import your own local photo/logo
+
+If you want to use your own PNG/JPG logo file:
+
+1. Copy your image into the `assets/` folder (example: `assets/my-logo.png`).
+2. Update login logo in `index.html`:
+
+```html
+<img src="assets/my-logo.png" class="logo" alt="FTU Logo" />
+```
+
+3. Update menu watermark in `styles.css` (`#homeScreen::before`):
+
+```css
+background: url('assets/my-logo.png') center center / contain no-repeat;
+```
+
+4. Save files and refresh browser (`Ctrl + F5`).
+
+Tip: Use a square image (for example 1024x1024) with transparent background for best result.
