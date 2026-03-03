@@ -204,22 +204,23 @@ Use this if Python command gives issues.
 
 ## 7) Login and test flow (for presentation practice)
 
-Use this demo account:
+Use any demo account (all passwords are `1`), for example:
 
 - Student ID: `2312280041`
-- PIN: `123456`
+- PIN: `1`
 
 ### Test steps
 
 1. Login as student
 2. On home, click **Wallet QR**
 3. Note the 6-digit code below the token box
-4. In right-side merchant panel:
+4. Open Wallet → Pay and copy the 6-digit code
+5. In right-side merchant panel:
    - choose service
    - enter amount (e.g. 35000)
    - paste 6-digit code
-5. Click **Charge Student Wallet**
-6. Verify:
+6. Click **Charge Student Wallet**
+7. Verify:
    - success message appears
    - student balance decreases
    - transaction appears in recent history

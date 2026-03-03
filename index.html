@@ -9,51 +9,93 @@
 <body>
   <main class="page-bg">
     <section class="iphone-frame">
+      <div class="dynamic-island"></div>
+      <div id="bannerContainer" class="banner-container"></div>
+
       <div id="loginScreen" class="login-card">
         <img src="assets/ftu-logo.svg" class="logo" alt="FTU Logo" />
         <h1>FA • FTU App</h1>
-        <p>Mobile Super App Prototype</p>
+        <p>FTU Campus Super App Prototype</p>
         <input id="studentId" value="2312280041" placeholder="Student ID" />
-        <input id="studentPin" value="123456" type="password" placeholder="PIN" />
+        <input id="studentPin" value="1" type="password" placeholder="PIN" />
         <button id="studentLoginBtn">Sign in Student</button>
       </div>
 
       <div id="appScreen" class="app-shell hidden">
         <header>
+          <button class="ghost-btn" id="backBtn">‹</button>
           <div class="user-pill" id="studentName">Student</div>
           <button class="logout" id="logoutBtn">⎋</button>
         </header>
 
-        <section id="homeTab">
+        <section id="homeScreen" class="screen">
           <section class="balance-banner">
             <p>Campus Wallet</p>
             <h2 id="balanceText">0 VND</h2>
             <span id="studentIdText"></span>
           </section>
           <section class="features-grid">
-            <button class="feature-btn red" data-open="walletTab">Wallet QR</button>
-            <button class="feature-btn orange">Pre-order</button>
-            <button class="feature-btn blue">Room Booking</button>
-            <button class="feature-btn purple">Parking</button>
-            <button class="feature-btn teal">Library</button>
-            <button class="feature-btn gray">ID Card</button>
+            <button class="feature-btn red" data-target="walletHubScreen">Wallet</button>
+            <button class="feature-btn orange" data-target="preOrderScreen">Pre-order</button>
+            <button class="feature-btn blue" data-target="roomScreen">Room Booking</button>
+            <button class="feature-btn teal" data-target="libraryScreen">Library</button>
+            <button class="feature-btn gray" data-target="idCardScreen">ID Card</button>
           </section>
         </section>
 
-        <section id="walletTab" class="wallet-screen hidden">
-          <h3>Dynamic QR Payment</h3>
-          <div id="qrBox" class="qr-box"></div>
-          <div class="code" id="codeText">------</div>
+        <section id="walletHubScreen" class="screen hidden">
+          <h3>Wallet</h3>
+          <div class="wallet-actions">
+            <button class="feature-btn red" data-target="payScreen">Pay</button>
+            <button class="feature-btn teal" data-target="receiveScreen">Receive / Nạp tiền</button>
+          </div>
+        </section>
+
+        <section id="payScreen" class="screen hidden">
+          <h3>Pay QR</h3>
+          <div id="payQrBox" class="qr-box"></div>
+          <div class="code" id="payCodeText">------</div>
           <div class="countdown-wrap"><div id="countdownBar" class="countdown"></div></div>
           <p id="countText">Refresh in 0s</p>
-          <button id="refreshBtn">Refresh now</button>
+          <button id="refreshPayBtn">Refresh now</button>
           <h4>Recent transactions</h4>
           <div id="txList" class="tx-list"></div>
         </section>
 
+        <section id="receiveScreen" class="screen hidden">
+          <h3>Receive / Top up</h3>
+          <label>Top-up amount (VND)</label>
+          <input id="topupAmount" type="number" value="100000" min="1000" step="1000" />
+          <div id="receiveQrBox" class="qr-box"></div>
+          <p id="receiveText" class="sub-text"></p>
+          <button id="generateTopupBtn">Generate new top-up QR</button>
+        </section>
+
+        <section id="preOrderScreen" class="screen hidden">
+          <h3>F.HUB Menu</h3>
+          <div id="menuList" class="menu-list"></div>
+        </section>
+
+        <section id="roomScreen" class="screen hidden">
+          <h3>Room Booking</h3>
+          <div id="roomList" class="room-list"></div>
+        </section>
+
+        <section id="libraryScreen" class="screen hidden">
+          <h3>Library Card QR</h3>
+          <div id="libraryQrBox" class="qr-box"></div>
+          <p class="sub-text" id="libraryText"></p>
+        </section>
+
+        <section id="idCardScreen" class="screen hidden">
+          <h3>Student ID QR</h3>
+          <div id="idQrBox" class="qr-box"></div>
+          <p class="sub-text" id="idText"></p>
+        </section>
+
         <nav>
           <button id="homeBtn" class="active">Home</button>
-          <button id="walletBtn">Wallet</button>
+          <button data-target="walletHubScreen">Wallet</button>
         </nav>
       </div>
     </section>
@@ -64,8 +106,8 @@
       <label>Service</label>
       <select id="serviceSelect">
         <option value="canteen">Canteen</option>
-        <option value="parking">Parking</option>
         <option value="coffee">Coffee</option>
+        <option value="room">Room fee</option>
       </select>
       <label>Amount (VND)</label>
       <input id="amountInput" value="35000" />
