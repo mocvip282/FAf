@@ -9,30 +9,39 @@ const users = {
   '2312280803': { id: 'U008', name: 'Nguyen Minh Duc', studentId: '2312280803', pin: '1', balance: 590000 }
 };
 
+const translations = {
+  en: {
+    campusWallet: 'Campus Wallet', wallet: 'Wallet', preOrder: 'Pre-order', room: 'Room', library: 'Library', id: 'ID', locker: 'Locker',
+    settings: 'Settings', language: 'Language', darkMode: 'Dark mode', logout: 'Logout',
+    pay: 'Pay', receive: 'Receive', payQr: 'Pay QR', recentTx: 'Recent transactions', refreshNow: 'Refresh now',
+    receiveTitle: 'Receive', topupAmount: 'Top-up amount (VND)', generateTopup: 'Generate new top-up QR', paidTopup: 'I paid this QR (demo add balance)',
+    fhub: 'F.HUB Menu', roomBooking: 'Room Booking', libraryQr: 'Library Card QR', studentQr: 'Student ID QR',
+    lockerControl: 'Locker Control', openLocker: 'Scan QR to open locker (demo)', releaseLocker: 'Release my locker', lockerStatus: 'View locker status map',
+    lockerStatusTitle: 'Locker Status (20)', lockerHint: 'Green = available, Red = occupied',
+    merchantPos: 'Merchant POS', demoMerchant: 'Demo merchant: ', service: 'Service', amount: 'Amount (VND)', token: 'Enter token or 6-digit code', charge: 'Charge Student Wallet', waiting: 'Waiting...'
+  },
+  vi: {
+    campusWallet: 'Ví Sinh viên', wallet: 'Ví', preOrder: 'Đặt trước', room: 'Phòng', library: 'Thư viện', id: 'Thẻ SV', locker: 'Tủ đồ',
+    settings: 'Cài đặt', language: 'Ngôn ngữ', darkMode: 'Chế độ tối', logout: 'Đăng xuất',
+    pay: 'Thanh toán', receive: 'Nhận tiền', payQr: 'QR Thanh toán', recentTx: 'Giao dịch gần đây', refreshNow: 'Làm mới',
+    receiveTitle: 'Nhận tiền', topupAmount: 'Số tiền nạp (VND)', generateTopup: 'Tạo QR nạp tiền mới', paidTopup: 'Đã quét QR (mô phỏng cộng tiền)',
+    fhub: 'Menu F.HUB', roomBooking: 'Đặt phòng', libraryQr: 'QR Thẻ thư viện', studentQr: 'QR Thẻ sinh viên',
+    lockerControl: 'Điều khiển tủ', openLocker: 'Quét QR mở tủ (mô phỏng)', releaseLocker: 'Trả tủ của tôi', lockerStatus: 'Xem trạng thái tủ',
+    lockerStatusTitle: 'Trạng thái tủ (20)', lockerHint: 'Xanh = trống, Đỏ = đã dùng',
+    merchantPos: 'POS Merchant', demoMerchant: 'Merchant demo: ', service: 'Dịch vụ', amount: 'Số tiền (VND)', token: 'Nhập token hoặc mã 6 số', charge: 'Trừ tiền ví sinh viên', waiting: 'Đang chờ...'
+  }
+};
+
 const menuItems = [
-  { name: 'Cà phê đen', price: 25000 },
-  { name: 'Cà phê nâu', price: 25000 },
-  { name: 'Bạc sỉu', price: 25000 },
-  { name: 'Espresso', price: 30000 },
-  { name: 'Americano', price: 30000 },
-  { name: 'Vanilla Latte', price: 30000 },
-  { name: 'Caramel Machiato', price: 30000 },
-  { name: 'Mocha', price: 30000 },
-  { name: 'Trà xanh nhài', price: 30000 },
-  { name: 'Trà nho', price: 30000 },
-  { name: 'Trà xoài', price: 30000 },
-  { name: 'Trà vải', price: 30000 },
-  { name: 'Matcha Latte', price: 30000 },
-  { name: 'Trà túi lọc', price: 20000 },
-  { name: 'Socola đá xay', price: 30000 }
+  { name: 'Cà phê đen', price: 25000 }, { name: 'Cà phê nâu', price: 25000 }, { name: 'Bạc sỉu', price: 25000 },
+  { name: 'Espresso', price: 30000 }, { name: 'Americano', price: 30000 }, { name: 'Vanilla Latte', price: 30000 },
+  { name: 'Caramel Machiato', price: 30000 }, { name: 'Mocha', price: 30000 }, { name: 'Trà xanh nhài', price: 30000 },
+  { name: 'Trà nho', price: 30000 }, { name: 'Trà xoài', price: 30000 }, { name: 'Trà vải', price: 30000 },
+  { name: 'Matcha Latte', price: 30000 }, { name: 'Trà túi lọc', price: 20000 }, { name: 'Socola đá xay', price: 30000 }
 ];
 
 const rooms = [
-  { id: 'A701', occupiedBy: null },
-  { id: 'A702', occupiedBy: null },
-  { id: 'A703', occupiedBy: null },
-  { id: 'A704', occupiedBy: null },
-  { id: 'A705', occupiedBy: null }
+  { id: 'A701', occupiedBy: null }, { id: 'A702', occupiedBy: null }, { id: 'A703', occupiedBy: null }, { id: 'A704', occupiedBy: null }, { id: 'A705', occupiedBy: null }
 ];
 
 const lockers = Array.from({ length: 20 }, (_, i) => ({ id: `L${String(i + 1).padStart(2, '0')}`, occupiedBy: null }));
@@ -44,12 +53,59 @@ let timer = null;
 let countdown = 0;
 let currentTopupAmount = 0;
 let userLocker = {};
+let currentLang = 'en';
 const TOKEN_TTL_SECONDS = 15;
 const screenHistory = [];
 
 const el = (id) => document.getElementById(id);
 const fmt = (n) => `${Number(n).toLocaleString('vi-VN')} VND`;
 const rand = (len) => Array.from({ length: len }, () => Math.floor(Math.random() * 16).toString(16)).join('').toUpperCase();
+
+function t(key) { return translations[currentLang][key] || key; }
+
+function applyLanguage() {
+  el('labelCampusWallet').textContent = t('campusWallet');
+  el('labelWallet').textContent = t('wallet');
+  el('labelPreOrder').textContent = t('preOrder');
+  el('labelRoom').textContent = t('room');
+  el('labelLibrary').textContent = t('library');
+  el('labelId').textContent = t('id');
+  el('labelLocker').textContent = t('locker');
+  el('labelSettings').textContent = t('settings');
+  el('labelLanguage').textContent = t('language');
+  el('labelDarkMode').textContent = t('darkMode');
+  el('settingsLogoutBtn').textContent = t('logout');
+  el('labelWalletTitle').textContent = t('wallet');
+  el('labelPay').textContent = t('pay');
+  el('labelReceive').textContent = t('receive');
+  el('labelPayQr').textContent = t('payQr');
+  el('labelRecentTx').textContent = t('recentTx');
+  el('refreshPayBtn').textContent = t('refreshNow');
+  el('labelReceiveTitle').textContent = t('receiveTitle');
+  el('labelTopupAmount').textContent = t('topupAmount');
+  el('generateTopupBtn').textContent = t('generateTopup');
+  el('confirmTopupBtn').textContent = t('paidTopup');
+  el('labelFhub').textContent = t('fhub');
+  el('labelRoomBooking').textContent = t('roomBooking');
+  el('labelLibraryQr').textContent = t('libraryQr');
+  el('labelStudentQr').textContent = t('studentQr');
+  el('labelLockerControl').textContent = t('lockerControl');
+  el('openLockerBtn').textContent = t('openLocker');
+  el('releaseLockerBtn').textContent = t('releaseLocker');
+  el('lockerStatusBtn').textContent = t('lockerStatus');
+  el('labelLockerStatus').textContent = t('lockerStatusTitle');
+  el('lockerMapHint').textContent = t('lockerHint');
+  el('labelMerchantPos').textContent = t('merchantPos');
+  el('labelDemoMerchant').innerHTML = `${t('demoMerchant')}<b>FTU Canteen A</b>`;
+  el('labelService').textContent = t('service');
+  el('labelAmount').textContent = t('amount');
+  el('labelToken').textContent = t('token');
+  el('chargeBtn').textContent = t('charge');
+  if (el('merchantMsg').textContent.trim() === '' || el('merchantMsg').textContent.trim() === 'Waiting...' || el('merchantMsg').textContent.trim() === 'Đang chờ...') {
+    el('merchantMsg').textContent = t('waiting');
+  }
+  el('navWallet').textContent = t('wallet');
+}
 
 function showBanner(message) {
   const wrap = el('bannerContainer');
@@ -58,10 +114,7 @@ function showBanner(message) {
   item.textContent = message;
   wrap.appendChild(item);
   setTimeout(() => item.classList.add('show'), 40);
-  setTimeout(() => {
-    item.classList.remove('show');
-    setTimeout(() => item.remove(), 300);
-  }, 2600);
+  setTimeout(() => { item.classList.remove('show'); setTimeout(() => item.remove(), 300); }, 2600);
 }
 
 function qrImage(payload, label = 'Scan QR') {
@@ -71,35 +124,22 @@ function qrImage(payload, label = 'Scan QR') {
 
 function withSecurityOverlay(containerId) {
   const box = el(containerId);
-  if (!box) return;
-  box.innerHTML += `
-    <div class="secure-overlay" data-secure="${containerId}">
-      <div class="secure-icon">🙈</div>
-      <p>Protected QR</p>
-      <button class="reveal-btn" data-reveal="${containerId}">Reveal with Face ID</button>
-    </div>
-  `;
+  box.innerHTML += `<div class="secure-overlay" data-secure="${containerId}"><div class="secure-icon">🙈</div><p>Protected QR</p><button class="reveal-btn" data-reveal="${containerId}">Reveal with Face ID</button></div>`;
 }
 
 function setupSecureReveal() {
   document.querySelectorAll('[data-reveal]').forEach((btn) => {
-    btn.addEventListener('click', () => {
+    btn.onclick = () => {
       const id = btn.getAttribute('data-reveal');
       const overlay = document.querySelector(`.secure-overlay[data-secure="${id}"]`);
       if (!overlay) return;
       overlay.innerHTML = `<div class="faceid-demo"><div class="face-ring"></div><p>Face ID</p><small>Authenticating…</small></div>`;
-      setTimeout(() => {
-        overlay.style.opacity = '0';
-        setTimeout(() => overlay.remove(), 260);
-        showBanner('Identity verified. QR unlocked.');
-      }, 900);
-    });
+      setTimeout(() => { overlay.style.opacity = '0'; setTimeout(() => overlay.remove(), 260); showBanner('Identity verified. QR unlocked.'); }, 900);
+    };
   });
 }
 
-function renderBalance() {
-  el('balanceText').textContent = fmt(currentStudent.balance);
-}
+function renderBalance() { el('balanceText').textContent = fmt(currentStudent.balance); }
 
 function showScreen(targetId, remember = true) {
   document.querySelectorAll('.screen').forEach((section) => section.classList.add('hidden'));
@@ -130,18 +170,9 @@ function renderTransactions() {
 
 function generatePayToken() {
   const issuedAt = Date.now();
-  currentPayToken = {
-    token: rand(8),
-    code: String(Math.floor(100000 + Math.random() * 900000)),
-    userId: currentStudent.id,
-    issuedAt,
-    expiresAt: issuedAt + TOKEN_TTL_SECONDS * 1000,
-    used: false
-  };
-
+  currentPayToken = { token: rand(8), code: String(Math.floor(100000 + Math.random() * 900000)), userId: currentStudent.id, issuedAt, expiresAt: issuedAt + TOKEN_TTL_SECONDS * 1000, used: false };
   countdown = TOKEN_TTL_SECONDS;
-  const payload = JSON.stringify({ token: currentPayToken.token, userId: currentPayToken.userId, issuedAt });
-  el('payQrBox').innerHTML = qrImage(payload, 'Merchant scans this pay QR');
+  el('payQrBox').innerHTML = qrImage(JSON.stringify({ token: currentPayToken.token, userId: currentPayToken.userId, issuedAt }), 'Merchant scans this pay QR');
   el('payCodeText').textContent = currentPayToken.code;
   el('countText').textContent = `Refresh in ${countdown}s`;
   el('countdownBar').style.width = '100%';
@@ -159,62 +190,38 @@ function startTokenTimer() {
 
 function generateTopupQr() {
   const amount = Number(el('topupAmount').value || 0);
-  if (!Number.isFinite(amount) || amount < 1000) {
-    showBanner('Top-up amount must be at least 1,000 VND');
-    return;
-  }
-
+  if (!Number.isFinite(amount) || amount < 1000) return showBanner('Top-up amount must be at least 1,000 VND');
   currentTopupAmount = Math.floor(amount);
-  const payload = JSON.stringify({ type: 'RECEIVE', userId: currentStudent.id, studentId: currentStudent.studentId, amount: currentTopupAmount, nonce: rand(6), ts: Date.now() });
-  el('receiveQrBox').innerHTML = qrImage(payload, 'Scan with bank app (demo only)');
+  el('receiveQrBox').innerHTML = qrImage(JSON.stringify({ type: 'RECEIVE', userId: currentStudent.id, studentId: currentStudent.studentId, amount: currentTopupAmount, nonce: rand(6), ts: Date.now() }), 'Scan with bank app (demo only)');
   el('receiveText').textContent = `Receive request: ${fmt(currentTopupAmount)} (demo QR)`;
-  showBanner(`New receive QR generated for ${fmt(currentTopupAmount)}`);
 }
 
 function chargeStudent(amount, service, source = 'merchant') {
   if (currentStudent.balance < amount) return false;
   currentStudent.balance -= amount;
   transactions.push({ userId: currentStudent.id, service, amount: -amount, source, timestamp: Date.now() });
-  renderBalance();
-  renderTransactions();
+  renderBalance(); renderTransactions();
   return true;
 }
 
 function confirmTopup() {
-  if (!currentTopupAmount) {
-    showBanner('Generate a receive QR first');
-    return;
-  }
-
+  if (!currentTopupAmount) return showBanner('Generate a receive QR first');
   currentStudent.balance += currentTopupAmount;
   transactions.push({ userId: currentStudent.id, service: 'Top-up / Receive', amount: currentTopupAmount, source: 'topup', timestamp: Date.now() });
-  renderBalance();
-  renderTransactions();
+  renderBalance(); renderTransactions();
   showBanner(`Balance added: +${fmt(currentTopupAmount)}`);
   generateTopupQr();
 }
 
 function renderMenu() {
-  el('menuList').innerHTML = menuItems.map((item) => `
-    <article class="menu-item">
-      <div>
-        <h4>${item.name}</h4>
-        <p>${fmt(item.price)}</p>
-      </div>
-      <button data-order="${item.name}" data-price="${item.price}">Pre-order</button>
-    </article>
-  `).join('');
-
+  el('menuList').innerHTML = menuItems.map((item) => `<article class="menu-item"><div><h4>${item.name}</h4><p>${fmt(item.price)}</p></div><button data-order="${item.name}" data-price="${item.price}">Pre-order</button></article>`).join('');
   document.querySelectorAll('[data-order]').forEach((btn) => {
-    btn.addEventListener('click', () => {
+    btn.onclick = () => {
       const name = btn.getAttribute('data-order');
       const price = Number(btn.getAttribute('data-price'));
-      if (!chargeStudent(price, `FHUB: ${name}`, 'preorder')) {
-        showBanner('Insufficient balance');
-        return;
-      }
+      if (!chargeStudent(price, `FHUB: ${name}`, 'preorder')) return showBanner('Insufficient balance');
       showBanner(`Pre-order success: ${name} - ${fmt(price)}`);
-    });
+    };
   });
 }
 
@@ -222,120 +229,89 @@ function renderRooms() {
   el('roomList').innerHTML = rooms.map((room) => {
     const mine = room.occupiedBy === currentStudent.id;
     const occupied = Boolean(room.occupiedBy);
-    return `
-      <article class="room-item ${occupied ? 'occupied' : 'free'}">
-        <div>
-          <h4>${room.id}</h4>
-          <p>${occupied ? (mine ? 'You are using this room' : 'Occupied') : 'Available'}</p>
-        </div>
-        <div class="room-actions">
-          ${mine ? `<button data-checkout="${room.id}" class="warn">Check out</button>` : ''}
-          ${!occupied ? `<button data-use="${room.id}">Use room</button>` : ''}
-        </div>
-      </article>
-    `;
+    return `<article class="room-item ${occupied ? 'occupied' : 'free'}"><div><h4>${room.id}</h4><p>${occupied ? (mine ? 'You are using this room' : 'Occupied') : 'Available'}</p></div><div class="room-actions">${mine ? `<button data-checkout="${room.id}" class="warn">Check out</button>` : ''}${!occupied ? `<button data-use="${room.id}">Use room</button>` : ''}</div></article>`;
   }).join('');
-
-  document.querySelectorAll('[data-use]').forEach((btn) => {
-    btn.addEventListener('click', () => {
-      const roomId = btn.getAttribute('data-use');
-      const room = rooms.find((r) => r.id === roomId);
-      room.occupiedBy = currentStudent.id;
-      showBanner(`You are now using room ${roomId}`);
-      renderRooms();
-    });
-  });
-
-  document.querySelectorAll('[data-checkout]').forEach((btn) => {
-    btn.addEventListener('click', () => {
-      const roomId = btn.getAttribute('data-checkout');
-      const room = rooms.find((r) => r.id === roomId);
-      room.occupiedBy = null;
-      showBanner(`Checked out from ${roomId}`);
-      renderRooms();
-    });
-  });
+  document.querySelectorAll('[data-use]').forEach((btn) => btn.onclick = () => { const room = rooms.find((r) => r.id === btn.getAttribute('data-use')); room.occupiedBy = currentStudent.id; renderRooms(); });
+  document.querySelectorAll('[data-checkout]').forEach((btn) => btn.onclick = () => { const room = rooms.find((r) => r.id === btn.getAttribute('data-checkout')); room.occupiedBy = null; renderRooms(); });
 }
 
 function renderCards() {
-  const libPayload = JSON.stringify({ type: 'LIB_CARD', userId: currentStudent.id, studentId: currentStudent.studentId, ts: Date.now() });
-  el('libraryQrBox').innerHTML = qrImage(libPayload, 'Library scanner QR');
+  el('libraryQrBox').innerHTML = qrImage(JSON.stringify({ type: 'LIB_CARD', userId: currentStudent.id, studentId: currentStudent.studentId, ts: Date.now() }), 'Library scanner QR');
   withSecurityOverlay('libraryQrBox');
   el('libraryText').textContent = `${currentStudent.name} • ${currentStudent.studentId}`;
-
-  const idPayload = JSON.stringify({ type: 'STUDENT_ID', userId: currentStudent.id, studentId: currentStudent.studentId, name: currentStudent.name });
-  el('idQrBox').innerHTML = qrImage(idPayload, 'Student ID QR');
+  el('idQrBox').innerHTML = qrImage(JSON.stringify({ type: 'STUDENT_ID', userId: currentStudent.id, studentId: currentStudent.studentId, name: currentStudent.name }), 'Student ID QR');
   withSecurityOverlay('idQrBox');
   el('idText').textContent = `${currentStudent.name} • FTU Student`;
-
   setupSecureReveal();
 }
 
 function renderLockerUser() {
   const assigned = userLocker[currentStudent.id];
   if (!assigned) {
-    const payload = JSON.stringify({ type: 'LOCKER_OPEN', userId: currentStudent.id, studentId: currentStudent.studentId, nonce: rand(6), ts: Date.now() });
-    el('lockerQrBox').innerHTML = qrImage(payload, 'Scan at locker to open one locker');
+    el('lockerQrBox').innerHTML = qrImage(JSON.stringify({ type: 'LOCKER_OPEN', userId: currentStudent.id, studentId: currentStudent.studentId, nonce: rand(6), ts: Date.now() }), 'Scan at locker to open one locker');
     el('lockerText').textContent = 'One locker per student. Scan once to claim.';
     el('openLockerBtn').disabled = false;
-    el('openLockerBtn').textContent = 'Scan QR to open locker (demo)';
+    el('releaseLockerBtn').disabled = true;
   } else {
     el('lockerQrBox').innerHTML = '<div class="locker-claimed">✅ Locker opened</div>';
     el('lockerText').textContent = `You are using locker ${assigned}.`;
     el('openLockerBtn').disabled = true;
-    el('openLockerBtn').textContent = `Locker ${assigned} already active`;
+    el('releaseLockerBtn').disabled = false;
   }
 }
 
 function renderLockerMap() {
-  const grid = el('lockerGrid');
-  grid.innerHTML = lockers.map((l) => {
-    const occupied = Boolean(l.occupiedBy);
-    return `<button class="locker-cell ${occupied ? 'occupied' : 'free'}" data-locker="${l.id}">${l.id}</button>`;
-  }).join('');
-
+  el('lockerGrid').innerHTML = lockers.map((l) => `<button class="locker-cell ${l.occupiedBy ? 'occupied' : 'free'}" data-locker="${l.id}">${l.id}</button>`).join('');
   document.querySelectorAll('[data-locker]').forEach((btn) => {
-    btn.addEventListener('click', () => {
+    btn.onclick = () => {
       const locker = lockers.find((l) => l.id === btn.getAttribute('data-locker'));
       if (!locker.occupiedBy) return showBanner(`${locker.id} is available`);
       const owner = Object.values(users).find((u) => u.id === locker.occupiedBy);
       showBanner(`${locker.id}: ${owner ? owner.name : locker.occupiedBy} is using it`);
-    });
+    };
   });
 }
 
 function claimLocker() {
   if (userLocker[currentStudent.id]) return;
   const free = lockers.find((l) => !l.occupiedBy);
-  if (!free) {
-    showBanner('No free locker left');
-    return;
-  }
+  if (!free) return showBanner('No free locker left');
   free.occupiedBy = currentStudent.id;
   userLocker[currentStudent.id] = free.id;
   renderLockerUser();
   renderLockerMap();
-  showBanner(`Locker ${free.id} opened for ${currentStudent.name}`);
+  showBanner(`Locker ${free.id} opened`);
+}
+
+function releaseLocker() {
+  const assigned = userLocker[currentStudent.id];
+  if (!assigned) return showBanner('You have no locker to release');
+  const locker = lockers.find((l) => l.id === assigned);
+  if (locker) locker.occupiedBy = null;
+  delete userLocker[currentStudent.id];
+  renderLockerUser();
+  renderLockerMap();
+  showBanner(`Locker ${assigned} released`);
 }
 
 function showApp() {
   el('loginScreen').classList.add('hidden');
   el('appScreen').classList.remove('hidden');
-  el('studentName').textContent = currentStudent.name;
+  el('profileMain').textContent = currentStudent.studentId;
+  el('profileSub').textContent = currentStudent.name;
   el('studentIdText').textContent = `ID: ${currentStudent.studentId}`;
-  renderBalance();
-  renderTransactions();
-  renderMenu();
-  renderRooms();
-  renderCards();
-  renderLockerUser();
-  renderLockerMap();
-  generatePayToken();
-  generateTopupQr();
-  startTokenTimer();
+  renderBalance(); renderTransactions(); renderMenu(); renderRooms(); renderCards(); renderLockerUser(); renderLockerMap();
+  generatePayToken(); generateTopupQr(); startTokenTimer();
+  applyLanguage();
   screenHistory.length = 0;
   showScreen('homeScreen');
-  showBanner(`Welcome ${currentStudent.name}`);
+}
+
+function logout() {
+  currentStudent = null;
+  if (timer) clearInterval(timer);
+  el('appScreen').classList.add('hidden');
+  el('loginScreen').classList.remove('hidden');
 }
 
 el('studentLoginBtn').addEventListener('click', () => {
@@ -347,29 +323,22 @@ el('studentLoginBtn').addEventListener('click', () => {
   showApp();
 });
 
-el('logoutBtn').addEventListener('click', () => {
-  currentStudent = null;
-  if (timer) clearInterval(timer);
-  el('appScreen').classList.add('hidden');
-  el('loginScreen').classList.remove('hidden');
-  showBanner('Logged out');
-});
-
+el('profileBtn').addEventListener('click', () => showScreen('settingsScreen'));
+el('settingsLogoutBtn').addEventListener('click', logout);
 el('backBtn').addEventListener('click', goBack);
 el('homeBtn').addEventListener('click', () => showScreen('homeScreen'));
 
-document.querySelectorAll('[data-target]').forEach((btn) => {
-  btn.addEventListener('click', () => showScreen(btn.getAttribute('data-target')));
-});
+document.querySelectorAll('[data-target]').forEach((btn) => btn.addEventListener('click', () => showScreen(btn.getAttribute('data-target'))));
 
-el('refreshPayBtn').addEventListener('click', () => {
-  generatePayToken();
-  showBanner('Pay QR refreshed');
-});
+el('refreshPayBtn').addEventListener('click', generatePayToken);
 el('generateTopupBtn').addEventListener('click', generateTopupQr);
 el('confirmTopupBtn').addEventListener('click', confirmTopup);
 el('openLockerBtn').addEventListener('click', claimLocker);
+el('releaseLockerBtn').addEventListener('click', releaseLocker);
 el('lockerStatusBtn').addEventListener('click', () => showScreen('lockerMapScreen'));
+
+el('languageSelect').addEventListener('change', (e) => { currentLang = e.target.value; applyLanguage(); });
+el('darkToggle').addEventListener('change', (e) => el('appScreen').classList.toggle('dark-mode', e.target.checked));
 
 el('chargeBtn').addEventListener('click', () => {
   if (!currentStudent) return alert('Login student first.');
@@ -377,26 +346,12 @@ el('chargeBtn').addEventListener('click', () => {
   const amount = Number(el('amountInput').value || 0);
   const service = el('serviceSelect').value;
 
-  if (!value || !currentPayToken || (value !== currentPayToken.token && value !== currentPayToken.code)) {
-    el('merchantMsg').textContent = '❌ Invalid token/code';
-    return;
-  }
-  if (currentPayToken.used) {
-    el('merchantMsg').textContent = '❌ Token already used';
-    return;
-  }
-  if (Date.now() > currentPayToken.expiresAt) {
-    el('merchantMsg').textContent = '❌ Token expired, ask student to refresh';
-    return;
-  }
-
-  if (!chargeStudent(amount, `Merchant: ${service}`, 'merchant')) {
-    el('merchantMsg').textContent = '❌ Insufficient balance';
-    return;
-  }
+  if (!value || !currentPayToken || (value !== currentPayToken.token && value !== currentPayToken.code)) return (el('merchantMsg').textContent = '❌ Invalid token/code');
+  if (currentPayToken.used) return (el('merchantMsg').textContent = '❌ Token already used');
+  if (Date.now() > currentPayToken.expiresAt) return (el('merchantMsg').textContent = '❌ Token expired, ask student to refresh');
+  if (!chargeStudent(amount, `Merchant: ${service}`, 'merchant')) return (el('merchantMsg').textContent = '❌ Insufficient balance');
 
   currentPayToken.used = true;
   el('tokenInput').value = '';
   el('merchantMsg').textContent = `✅ Payment success: ${fmt(amount)} (${service})`;
-  showBanner(`Payment success: ${fmt(amount)}`);
 });
