@@ -12,23 +12,25 @@ const users = {
 const translations = {
   en: {
     campusWallet: 'Campus Wallet', wallet: 'Wallet', preOrder: 'Pre-order', room: 'Room', library: 'Library', id: 'ID', locker: 'Locker',
-    settings: 'Settings', language: 'Language', darkMode: 'Dark mode', logout: 'Logout',
+    settings: 'Settings', personalData: 'Personal data', language: 'Language', darkMode: 'Dark mode', logout: 'Logout',
     pay: 'Pay', receive: 'Receive', payQr: 'Pay QR', recentTx: 'Recent transactions', refreshNow: 'Refresh now',
     receiveTitle: 'Receive', topupAmount: 'Top-up amount (VND)', generateTopup: 'Generate new top-up QR', paidTopup: 'I paid this QR (demo add balance)',
     fhub: 'F.HUB Menu', roomBooking: 'Room Booking', libraryQr: 'Library Card QR', studentQr: 'Student ID QR',
     lockerControl: 'Locker Control', openLocker: 'Scan QR to open locker (demo)', releaseLocker: 'Release my locker', lockerStatus: 'View locker status map',
     lockerStatusTitle: 'Locker Status (20)', lockerHint: 'Green = available, Red = occupied',
-    merchantPos: 'Merchant POS', demoMerchant: 'Demo merchant: ', service: 'Service', amount: 'Amount (VND)', token: 'Enter token or 6-digit code', charge: 'Charge Student Wallet', waiting: 'Waiting...'
+    merchantPos: 'Merchant POS', demoMerchant: 'Demo merchant: ', service: 'Service', amount: 'Amount (VND)', token: 'Enter token or 6-digit code', charge: 'Charge Student Wallet', waiting: 'Waiting...',
+    cart: 'Cart', checkout: 'Checkout cart', cartEmpty: 'Your cart is empty.', total: 'Total'
   },
   vi: {
     campusWallet: 'Ví Sinh viên', wallet: 'Ví', preOrder: 'Đặt trước', room: 'Phòng', library: 'Thư viện', id: 'Thẻ SV', locker: 'Tủ đồ',
-    settings: 'Cài đặt', language: 'Ngôn ngữ', darkMode: 'Chế độ tối', logout: 'Đăng xuất',
+    settings: 'Cài đặt', personalData: 'Thông tin cá nhân', language: 'Ngôn ngữ', darkMode: 'Chế độ tối', logout: 'Đăng xuất',
     pay: 'Thanh toán', receive: 'Nhận tiền', payQr: 'QR Thanh toán', recentTx: 'Giao dịch gần đây', refreshNow: 'Làm mới',
     receiveTitle: 'Nhận tiền', topupAmount: 'Số tiền nạp (VND)', generateTopup: 'Tạo QR nạp tiền mới', paidTopup: 'Đã quét QR (mô phỏng cộng tiền)',
     fhub: 'Menu F.HUB', roomBooking: 'Đặt phòng', libraryQr: 'QR Thẻ thư viện', studentQr: 'QR Thẻ sinh viên',
     lockerControl: 'Điều khiển tủ', openLocker: 'Quét QR mở tủ (mô phỏng)', releaseLocker: 'Trả tủ của tôi', lockerStatus: 'Xem trạng thái tủ',
     lockerStatusTitle: 'Trạng thái tủ (20)', lockerHint: 'Xanh = trống, Đỏ = đã dùng',
-    merchantPos: 'POS Merchant', demoMerchant: 'Merchant demo: ', service: 'Dịch vụ', amount: 'Số tiền (VND)', token: 'Nhập token hoặc mã 6 số', charge: 'Trừ tiền ví sinh viên', waiting: 'Đang chờ...'
+    merchantPos: 'POS Merchant', demoMerchant: 'Merchant demo: ', service: 'Dịch vụ', amount: 'Số tiền (VND)', token: 'Nhập token hoặc mã 6 số', charge: 'Trừ tiền ví sinh viên', waiting: 'Đang chờ...',
+    cart: 'Giỏ hàng', checkout: 'Thanh toán giỏ hàng', cartEmpty: 'Giỏ hàng đang trống.', total: 'Tổng cộng'
   }
 };
 
@@ -54,6 +56,7 @@ let countdown = 0;
 let currentTopupAmount = 0;
 let userLocker = {};
 let currentLang = 'en';
+let cart = {};
 const TOKEN_TTL_SECONDS = 15;
 const screenHistory = [];
 
@@ -72,6 +75,7 @@ function applyLanguage() {
   el('labelId').textContent = t('id');
   el('labelLocker').textContent = t('locker');
   el('labelSettings').textContent = t('settings');
+  el('labelPersonalData').textContent = t('personalData');
   el('labelLanguage').textContent = t('language');
   el('labelDarkMode').textContent = t('darkMode');
   el('settingsLogoutBtn').textContent = t('logout');
@@ -86,6 +90,8 @@ function applyLanguage() {
   el('generateTopupBtn').textContent = t('generateTopup');
   el('confirmTopupBtn').textContent = t('paidTopup');
   el('labelFhub').textContent = t('fhub');
+  el('labelCart').textContent = t('cart');
+  el('checkoutBtn').textContent = t('checkout');
   el('labelRoomBooking').textContent = t('roomBooking');
   el('labelLibraryQr').textContent = t('libraryQr');
   el('labelStudentQr').textContent = t('studentQr');
@@ -214,15 +220,65 @@ function confirmTopup() {
 }
 
 function renderMenu() {
-  el('menuList').innerHTML = menuItems.map((item) => `<article class="menu-item"><div><h4>${item.name}</h4><p>${fmt(item.price)}</p></div><button data-order="${item.name}" data-price="${item.price}">Pre-order</button></article>`).join('');
-  document.querySelectorAll('[data-order]').forEach((btn) => {
-    btn.onclick = () => {
-      const name = btn.getAttribute('data-order');
-      const price = Number(btn.getAttribute('data-price'));
-      if (!chargeStudent(price, `FHUB: ${name}`, 'preorder')) return showBanner('Insufficient balance');
-      showBanner(`Pre-order success: ${name} - ${fmt(price)}`);
-    };
+  const categories = {
+    coffee: ['Cà phê đen', 'Cà phê nâu', 'Bạc sỉu', 'Espresso', 'Americano', 'Vanilla Latte', 'Caramel Machiato', 'Mocha'],
+    tea: ['Trà xanh nhài', 'Trà nho', 'Trà xoài', 'Trà vải', 'Trà túi lọc'],
+    other: ['Matcha Latte', 'Socola đá xay']
+  };
+  const labels = {
+    en: { coffee: 'Coffee', tea: 'Tea', other: 'Other' },
+    vi: { coffee: 'Cà phê', tea: 'Trà', other: 'Khác' }
+  };
+
+  el('menuList').innerHTML = ['coffee', 'tea', 'other'].map((group) => {
+    const items = menuItems.filter((item) => categories[group].includes(item.name));
+    return `<div class="menu-section">${labels[currentLang][group]}</div>${items.map((item) => {
+      const qty = cart[item.name] || 0;
+      return `<article class="menu-item"><div><h4>${item.name}</h4><p>${fmt(item.price)}</p></div><div class="qty-control"><button data-minus="${item.name}">-</button><b>${qty}</b><button data-plus="${item.name}">+</button></div></article>`;
+    }).join('')}`;
+  }).join('');
+
+  document.querySelectorAll('[data-plus]').forEach((btn) => btn.onclick = () => updateCart(btn.getAttribute('data-plus'), 1));
+  document.querySelectorAll('[data-minus]').forEach((btn) => btn.onclick = () => updateCart(btn.getAttribute('data-minus'), -1));
+  renderCart();
+}
+
+function updateCart(itemName, change) {
+  const next = Math.max(0, (cart[itemName] || 0) + change);
+  if (next === 0) delete cart[itemName];
+  else cart[itemName] = next;
+  renderMenu();
+}
+
+function renderCart() {
+  const entries = Object.entries(cart);
+  if (!entries.length) {
+    el('cartList').innerHTML = `<small>${t('cartEmpty')}</small>`;
+    return;
+  }
+  const lines = entries.map(([name, qty]) => {
+    const item = menuItems.find((m) => m.name === name);
+    return `<div class="cart-item"><span>${name} x${qty}</span><b>${fmt(item.price * qty)}</b></div>`;
   });
+  const total = entries.reduce((sum, [name, qty]) => {
+    const item = menuItems.find((m) => m.name === name);
+    return sum + (item.price * qty);
+  }, 0);
+  lines.push(`<div class="cart-total">${t('total')}: ${fmt(total)}</div>`);
+  el('cartList').innerHTML = lines.join('');
+}
+
+function checkoutCart() {
+  const entries = Object.entries(cart);
+  if (!entries.length) return showBanner(t('cartEmpty'));
+  const total = entries.reduce((sum, [name, qty]) => {
+    const item = menuItems.find((m) => m.name === name);
+    return sum + (item.price * qty);
+  }, 0);
+  if (!chargeStudent(total, 'FHUB Cart Checkout', 'preorder')) return showBanner('Insufficient balance');
+  cart = {};
+  renderMenu();
+  showBanner(`Checkout success: ${fmt(total)}`);
 }
 
 function renderRooms() {
@@ -303,12 +359,14 @@ function showApp() {
   renderBalance(); renderTransactions(); renderMenu(); renderRooms(); renderCards(); renderLockerUser(); renderLockerMap();
   generatePayToken(); generateTopupQr(); startTokenTimer();
   applyLanguage();
+  cart = {};
   screenHistory.length = 0;
   showScreen('homeScreen');
 }
 
 function logout() {
   currentStudent = null;
+  cart = {};
   if (timer) clearInterval(timer);
   el('appScreen').classList.add('hidden');
   el('loginScreen').classList.remove('hidden');
@@ -323,7 +381,8 @@ el('studentLoginBtn').addEventListener('click', () => {
   showApp();
 });
 
-el('profileBtn').addEventListener('click', () => showScreen('settingsScreen'));
+el('profileBtn').addEventListener('click', () => showScreen('personalScreen'));
+el('settingsBtn').addEventListener('click', () => showScreen('settingsScreen'));
 el('settingsLogoutBtn').addEventListener('click', logout);
 el('backBtn').addEventListener('click', goBack);
 el('homeBtn').addEventListener('click', () => showScreen('homeScreen'));
@@ -339,6 +398,7 @@ el('lockerStatusBtn').addEventListener('click', () => showScreen('lockerMapScree
 
 el('languageSelect').addEventListener('change', (e) => { currentLang = e.target.value; applyLanguage(); });
 el('darkToggle').addEventListener('change', (e) => el('appScreen').classList.toggle('dark-mode', e.target.checked));
+el('checkoutBtn').addEventListener('click', checkoutCart);
 
 el('chargeBtn').addEventListener('click', () => {
   if (!currentStudent) return alert('Login student first.');

@@ -24,12 +24,15 @@
       <div id="appScreen" class="app-shell hidden">
         <header>
           <button class="ghost-btn" id="backBtn">‹</button>
-          <button id="profileBtn" class="profile-bar" title="Settings">
-            <img src="assets/ftu-logo.svg" class="profile-avatar" alt="Profile" />
+          <button id="profileBtn" class="profile-bar" title="Personal data">
+            <img src="assets/icons/avatar.svg" class="profile-avatar" alt="Profile" />
             <div class="profile-meta">
               <strong id="profileMain">2312280041</strong>
               <small id="profileSub">Student</small>
             </div>
+          </button>
+          <button id="settingsBtn" class="settings-btn" title="Settings" aria-label="Settings">
+            <img src="assets/icons/settings.svg" class="settings-icon" alt="" />
           </button>
         </header>
 
@@ -47,6 +50,17 @@
             <button class="feature-btn minimal" data-target="idCardScreen"><img class="icon-img" src="assets/icons/id.svg" alt="" /><span class="btn-text" id="labelId">ID</span></button>
             <button class="feature-btn minimal" data-target="lockerScreen"><img class="icon-img" src="assets/icons/locker.svg" alt="" /><span class="btn-text" id="labelLocker">Locker</span></button>
           </section>
+        </section>
+
+        <section id="personalScreen" class="screen hidden">
+          <h3 id="labelPersonalData">Personal data</h3>
+          <div class="settings-card">
+            <div class="data-row"><span>Student ID</span><b id="pdStudentId">xxxxxxxxxx</b></div>
+            <div class="data-row"><span>Name</span><b id="pdName">xxxxxxxx</b></div>
+            <div class="data-row"><span>DOB</span><b id="pdDob">xx/xx/xxxx</b></div>
+            <div class="data-row"><span>Class</span><b id="pdClass">xxxxx</b></div>
+            <div class="data-row"><span>Email</span><b id="pdEmail">xxxxx@xxxxx</b></div>
+          </div>
         </section>
 
         <section id="settingsScreen" class="screen hidden">
@@ -100,6 +114,9 @@
         <section id="preOrderScreen" class="screen hidden">
           <h3 id="labelFhub">F.HUB Menu</h3>
           <div id="menuList" class="menu-list"></div>
+          <h4 id="labelCart">Cart</h4>
+          <div id="cartList" class="tx-list"></div>
+          <button id="checkoutBtn">Checkout cart</button>
         </section>
 
         <section id="roomScreen" class="screen hidden">
