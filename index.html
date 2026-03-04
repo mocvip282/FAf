@@ -35,19 +35,20 @@
             <span id="studentIdText"></span>
           </section>
           <section class="features-grid">
-            <button class="feature-btn minimal" data-target="walletHubScreen" title="Wallet" aria-label="Wallet"><span class="icon">👛</span><span class="btn-text">Wallet</span></button>
-            <button class="feature-btn minimal" data-target="preOrderScreen" title="Pre-order" aria-label="Pre-order"><span class="icon">☕</span><span class="btn-text">Pre-order</span></button>
-            <button class="feature-btn minimal" data-target="roomScreen" title="Room booking" aria-label="Room booking"><span class="icon">🏫</span><span class="btn-text">Room</span></button>
-            <button class="feature-btn minimal" data-target="libraryScreen" title="Library" aria-label="Library"><span class="icon">📖</span><span class="btn-text">Library</span></button>
-            <button class="feature-btn minimal" data-target="idCardScreen" title="ID Card" aria-label="ID Card"><span class="icon">🪪</span><span class="btn-text">ID</span></button>
+            <button class="feature-btn minimal" data-target="walletHubScreen" title="Wallet" aria-label="Wallet"><img class="icon-img" src="assets/icons/wallet.svg" alt="" /><span class="btn-text">Wallet</span></button>
+            <button class="feature-btn minimal" data-target="preOrderScreen" title="Pre-order" aria-label="Pre-order"><img class="icon-img" src="assets/icons/coffee.svg" alt="" /><span class="btn-text">Pre-order</span></button>
+            <button class="feature-btn minimal" data-target="roomScreen" title="Room booking" aria-label="Room booking"><img class="icon-img" src="assets/icons/room.svg" alt="" /><span class="btn-text">Room</span></button>
+            <button class="feature-btn minimal" data-target="libraryScreen" title="Library" aria-label="Library"><img class="icon-img" src="assets/icons/library.svg" alt="" /><span class="btn-text">Library</span></button>
+            <button class="feature-btn minimal" data-target="idCardScreen" title="ID Card" aria-label="ID Card"><img class="icon-img" src="assets/icons/id.svg" alt="" /><span class="btn-text">ID</span></button>
+            <button class="feature-btn minimal" data-target="lockerScreen" title="Locker" aria-label="Locker"><img class="icon-img" src="assets/icons/locker.svg" alt="" /><span class="btn-text">Locker</span></button>
           </section>
         </section>
 
         <section id="walletHubScreen" class="screen hidden">
           <h3>Wallet</h3>
           <div class="wallet-actions">
-            <button class="feature-btn minimal" data-target="payScreen"><span class="icon">💸</span><span>Pay</span></button>
-            <button class="feature-btn minimal" data-target="receiveScreen"><span class="icon">📥</span><span>Receive</span></button>
+            <button class="feature-btn minimal wallet-action" data-target="payScreen"><img class="icon-img" src="assets/icons/pay.svg" alt="" /><span>Pay</span></button>
+            <button class="feature-btn minimal wallet-action" data-target="receiveScreen"><img class="icon-img" src="assets/icons/receive.svg" alt="" /><span>Receive</span></button>
           </div>
         </section>
 
@@ -84,14 +85,28 @@
 
         <section id="libraryScreen" class="screen hidden">
           <h3>Library Card QR</h3>
-          <div id="libraryQrBox" class="qr-box"></div>
+          <div id="libraryQrBox" class="qr-box secure"></div>
           <p class="sub-text" id="libraryText"></p>
         </section>
 
         <section id="idCardScreen" class="screen hidden">
           <h3>Student ID QR</h3>
-          <div id="idQrBox" class="qr-box"></div>
+          <div id="idQrBox" class="qr-box secure"></div>
           <p class="sub-text" id="idText"></p>
+        </section>
+
+        <section id="lockerScreen" class="screen hidden">
+          <h3>Locker Control</h3>
+          <div id="lockerQrBox" class="qr-box"></div>
+          <p id="lockerText" class="sub-text"></p>
+          <button id="openLockerBtn">Scan QR to open locker (demo)</button>
+          <button id="lockerStatusBtn" class="secondary-btn">View locker status map</button>
+        </section>
+
+        <section id="lockerMapScreen" class="screen hidden">
+          <h3>Locker Status (20)</h3>
+          <div id="lockerGrid" class="locker-grid"></div>
+          <p class="sub-text" id="lockerMapHint">Green = available, Red = occupied</p>
         </section>
 
         <nav>
@@ -109,6 +124,7 @@
         <option value="canteen">Canteen</option>
         <option value="coffee">Coffee</option>
         <option value="room">Room fee</option>
+        <option value="parking">Parking</option>
       </select>
       <label>Amount (VND)</label>
       <input id="amountInput" value="35000" />

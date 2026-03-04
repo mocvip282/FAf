@@ -35,12 +35,15 @@ const rooms = [
   { id: 'A705', occupiedBy: null }
 ];
 
+const lockers = Array.from({ length: 20 }, (_, i) => ({ id: `L${String(i + 1).padStart(2, '0')}`, occupiedBy: null }));
+
 let currentStudent = null;
 let transactions = [];
 let currentPayToken = null;
 let timer = null;
 let countdown = 0;
 let currentTopupAmount = 0;
+let userLocker = {};
 const TOKEN_TTL_SECONDS = 15;
 const screenHistory = [];
 
@@ -66,6 +69,34 @@ function qrImage(payload, label = 'Scan QR') {
   return `<img class="qr-image" alt="QR" src="https://api.qrserver.com/v1/create-qr-code/?size=220x220&margin=0&data=${encoded}"><small class="qr-hint">${label}</small>`;
 }
 
+function withSecurityOverlay(containerId) {
+  const box = el(containerId);
+  if (!box) return;
+  box.innerHTML += `
+    <div class="secure-overlay" data-secure="${containerId}">
+      <div class="secure-icon">🙈</div>
+      <p>Protected QR</p>
+      <button class="reveal-btn" data-reveal="${containerId}">Reveal with Face ID</button>
+    </div>
+  `;
+}
+
+function setupSecureReveal() {
+  document.querySelectorAll('[data-reveal]').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const id = btn.getAttribute('data-reveal');
+      const overlay = document.querySelector(`.secure-overlay[data-secure="${id}"]`);
+      if (!overlay) return;
+      overlay.innerHTML = `<div class="faceid-demo"><div class="face-ring"></div><p>Face ID</p><small>Authenticating…</small></div>`;
+      setTimeout(() => {
+        overlay.style.opacity = '0';
+        setTimeout(() => overlay.remove(), 260);
+        showBanner('Identity verified. QR unlocked.');
+      }, 900);
+    });
+  });
+}
+
 function renderBalance() {
   el('balanceText').textContent = fmt(currentStudent.balance);
 }
@@ -79,6 +110,9 @@ function showScreen(targetId, remember = true) {
 
   if (targetId === 'receiveScreen' && currentStudent) generateTopupQr();
   if (targetId === 'roomScreen' && currentStudent) renderRooms();
+  if (targetId === 'lockerScreen' && currentStudent) renderLockerUser();
+  if (targetId === 'lockerMapScreen' && currentStudent) renderLockerMap();
+  if (targetId === 'libraryScreen' || targetId === 'idCardScreen') renderCards();
 }
 
 function goBack() {
@@ -131,14 +165,7 @@ function generateTopupQr() {
   }
 
   currentTopupAmount = Math.floor(amount);
-  const payload = JSON.stringify({
-    type: 'RECEIVE',
-    userId: currentStudent.id,
-    studentId: currentStudent.studentId,
-    amount: currentTopupAmount,
-    nonce: rand(6),
-    ts: Date.now()
-  });
+  const payload = JSON.stringify({ type: 'RECEIVE', userId: currentStudent.id, studentId: currentStudent.studentId, amount: currentTopupAmount, nonce: rand(6), ts: Date.now() });
   el('receiveQrBox').innerHTML = qrImage(payload, 'Scan with bank app (demo only)');
   el('receiveText').textContent = `Receive request: ${fmt(currentTopupAmount)} (demo QR)`;
   showBanner(`New receive QR generated for ${fmt(currentTopupAmount)}`);
@@ -152,7 +179,6 @@ function chargeStudent(amount, service, source = 'merchant') {
   renderTransactions();
   return true;
 }
-
 
 function confirmTopup() {
   if (!currentTopupAmount) {
@@ -234,11 +260,62 @@ function renderRooms() {
 function renderCards() {
   const libPayload = JSON.stringify({ type: 'LIB_CARD', userId: currentStudent.id, studentId: currentStudent.studentId, ts: Date.now() });
   el('libraryQrBox').innerHTML = qrImage(libPayload, 'Library scanner QR');
+  withSecurityOverlay('libraryQrBox');
   el('libraryText').textContent = `${currentStudent.name} • ${currentStudent.studentId}`;
 
   const idPayload = JSON.stringify({ type: 'STUDENT_ID', userId: currentStudent.id, studentId: currentStudent.studentId, name: currentStudent.name });
   el('idQrBox').innerHTML = qrImage(idPayload, 'Student ID QR');
+  withSecurityOverlay('idQrBox');
   el('idText').textContent = `${currentStudent.name} • FTU Student`;
+
+  setupSecureReveal();
+}
+
+function renderLockerUser() {
+  const assigned = userLocker[currentStudent.id];
+  if (!assigned) {
+    const payload = JSON.stringify({ type: 'LOCKER_OPEN', userId: currentStudent.id, studentId: currentStudent.studentId, nonce: rand(6), ts: Date.now() });
+    el('lockerQrBox').innerHTML = qrImage(payload, 'Scan at locker to open one locker');
+    el('lockerText').textContent = 'One locker per student. Scan once to claim.';
+    el('openLockerBtn').disabled = false;
+    el('openLockerBtn').textContent = 'Scan QR to open locker (demo)';
+  } else {
+    el('lockerQrBox').innerHTML = '<div class="locker-claimed">✅ Locker opened</div>';
+    el('lockerText').textContent = `You are using locker ${assigned}.`;
+    el('openLockerBtn').disabled = true;
+    el('openLockerBtn').textContent = `Locker ${assigned} already active`;
+  }
+}
+
+function renderLockerMap() {
+  const grid = el('lockerGrid');
+  grid.innerHTML = lockers.map((l) => {
+    const occupied = Boolean(l.occupiedBy);
+    return `<button class="locker-cell ${occupied ? 'occupied' : 'free'}" data-locker="${l.id}">${l.id}</button>`;
+  }).join('');
+
+  document.querySelectorAll('[data-locker]').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const locker = lockers.find((l) => l.id === btn.getAttribute('data-locker'));
+      if (!locker.occupiedBy) return showBanner(`${locker.id} is available`);
+      const owner = Object.values(users).find((u) => u.id === locker.occupiedBy);
+      showBanner(`${locker.id}: ${owner ? owner.name : locker.occupiedBy} is using it`);
+    });
+  });
+}
+
+function claimLocker() {
+  if (userLocker[currentStudent.id]) return;
+  const free = lockers.find((l) => !l.occupiedBy);
+  if (!free) {
+    showBanner('No free locker left');
+    return;
+  }
+  free.occupiedBy = currentStudent.id;
+  userLocker[currentStudent.id] = free.id;
+  renderLockerUser();
+  renderLockerMap();
+  showBanner(`Locker ${free.id} opened for ${currentStudent.name}`);
 }
 
 function showApp() {
@@ -251,6 +328,8 @@ function showApp() {
   renderMenu();
   renderRooms();
   renderCards();
+  renderLockerUser();
+  renderLockerMap();
   generatePayToken();
   generateTopupQr();
   startTokenTimer();
@@ -289,6 +368,8 @@ el('refreshPayBtn').addEventListener('click', () => {
 });
 el('generateTopupBtn').addEventListener('click', generateTopupQr);
 el('confirmTopupBtn').addEventListener('click', confirmTopup);
+el('openLockerBtn').addEventListener('click', claimLocker);
+el('lockerStatusBtn').addEventListener('click', () => showScreen('lockerMapScreen'));
 
 el('chargeBtn').addEventListener('click', () => {
   if (!currentStudent) return alert('Login student first.');
