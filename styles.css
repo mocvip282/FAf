@@ -24,14 +24,14 @@ button:active { transform:scale(.98); }
 .app-shell::after { content:""; position:absolute; inset:0; background: rgba(255,255,255,.82); pointer-events:none; z-index:0; }
 .app-shell > * { position:relative; z-index:1; }
 
-header { padding:10px 16px; display:grid; grid-template-columns:34px 1fr 34px; gap:10px; align-items:center; }
-.ghost-btn { background:#fff; color:#334155; border:1px solid #e2e8f0; padding:0; height:34px; }
-.profile-bar { width:100%; background:#fff; color:#111827; border:1px solid #e5e7eb; display:flex; align-items:center; gap:10px; justify-content:flex-start; padding:8px 10px; border-radius:14px; }
-.profile-avatar { width:30px; height:30px; border-radius:50%; background:#be123c; padding:6px; }
-.profile-meta { display:grid; text-align:left; }
-.profile-meta strong { font-size:13px; line-height:1; }
-.profile-meta small { color:#64748b; font-size:11px; }
-.settings-btn { width:34px; height:34px; border-radius:10px; padding:0; background:#be123c; display:grid; place-items:center; }
+header { padding:10px 16px; display:flex; gap:10px; align-items:center; }
+.ghost-btn { flex:0 0 34px; background:#fff; color:#334155; border:1px solid #e2e8f0; padding:0; height:34px; }
+.profile-bar { flex:1; min-width:0; background:#fff; color:#111827; border:1px solid #e5e7eb; display:flex; align-items:center; gap:10px; justify-content:flex-start; padding:8px 10px; border-radius:14px; overflow:hidden; }
+.profile-avatar { flex:0 0 auto; width:30px; height:30px; border-radius:50%; background:#be123c; padding:6px; }
+.profile-meta { min-width:0; display:grid; text-align:left; }
+.profile-meta strong { font-size:13px; line-height:1.1; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.profile-meta small { color:#64748b; font-size:11px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.settings-btn { flex:0 0 34px; width:34px; height:34px; border-radius:10px; padding:0; background:#be123c; display:grid; place-items:center; }
 .settings-icon { width:18px; height:18px; }
 
 .screen { padding:8px 16px 14px; display:grid; gap:10px; align-content:start; overflow-x:hidden; }
