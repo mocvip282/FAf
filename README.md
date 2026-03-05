@@ -369,3 +369,9 @@ background: url('assets/my-logo.png') center center / contain no-repeat;
 4. Save files and refresh browser (`Ctrl + F5`).
 
 Tip: Use a square image (for example 1024x1024) with transparent background for best result.
+
+## Install as an app (PWA)
+- Open `http://<your-ip>:5173` on your phone.
+- Android Chrome/Edge: tap **Install app** when prompted.
+- iPhone Safari: tap **Share** → **Add to Home Screen**.
+- Launch from home screen to open in standalone app-like mode.

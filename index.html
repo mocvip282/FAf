@@ -4,6 +4,11 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1.0" />
   <title>FA - FTU App Prototype</title>
+  <meta name="theme-color" content="#c8102e" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="FA FTU" />
+  <link rel="manifest" href="manifest.webmanifest" />
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
@@ -19,6 +24,8 @@
         <input id="studentId" value="2312280041" placeholder="Student ID" />
         <input id="studentPin" value="1" type="password" placeholder="PIN" />
         <button id="studentLoginBtn">Sign in Student</button>
+        <button id="installAppBtn" class="secondary-btn hidden">Install app</button>
+        <small id="installHint" class="install-hint hidden"></small>
       </div>
 
       <div id="appScreen" class="app-shell hidden">
@@ -78,7 +85,8 @@
                 <span class="slider"></span>
               </label>
             </div>
-            <button id="fullscreenBtn" class="secondary-btn">Enable full screen</button>
+            <button id="installAppBtnSettings" class="secondary-btn hidden">Install app</button>
+            <small id="installHintSettings" class="install-hint hidden"></small>
           </div>
           <button id="settingsLogoutBtn" class="logout-wide">Logout</button>
         </section>
@@ -178,5 +186,10 @@
     </aside>
   </main>
   <script src="app.js"></script>
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => navigator.serviceWorker.register('./sw.js').catch(() => {}));
+    }
+  </script>
 </body>
 </html>
