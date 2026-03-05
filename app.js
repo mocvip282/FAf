@@ -19,7 +19,7 @@ const translations = {
     lockerControl: 'Locker Control', openLocker: 'Scan QR to open locker (demo)', releaseLocker: 'Release my locker', lockerStatus: 'View locker status map',
     lockerStatusTitle: 'Locker Status (20)', lockerHint: 'Green = available, Red = occupied',
     merchantPos: 'Merchant POS', demoMerchant: 'Demo merchant: ', service: 'Service', amount: 'Amount (VND)', token: 'Enter token or 6-digit code', charge: 'Charge Student Wallet', waiting: 'Waiting...',
-    cart: 'Cart', checkout: 'Checkout cart', cartEmpty: 'Your cart is empty.', total: 'Total'
+    cart: 'Cart', checkout: 'Checkout cart', cartEmpty: 'Your cart is empty.', total: 'Total', fullScreen: 'Enable full screen', exitFullScreen: 'Exit full screen'
   },
   vi: {
     campusWallet: 'Ví Sinh viên', wallet: 'Ví', preOrder: 'Đặt trước', room: 'Phòng', library: 'Thư viện', id: 'Thẻ SV', locker: 'Tủ đồ',
@@ -30,7 +30,7 @@ const translations = {
     lockerControl: 'Điều khiển tủ', openLocker: 'Quét QR mở tủ (mô phỏng)', releaseLocker: 'Trả tủ của tôi', lockerStatus: 'Xem trạng thái tủ',
     lockerStatusTitle: 'Trạng thái tủ (20)', lockerHint: 'Xanh = trống, Đỏ = đã dùng',
     merchantPos: 'POS Merchant', demoMerchant: 'Merchant demo: ', service: 'Dịch vụ', amount: 'Số tiền (VND)', token: 'Nhập token hoặc mã 6 số', charge: 'Trừ tiền ví sinh viên', waiting: 'Đang chờ...',
-    cart: 'Giỏ hàng', checkout: 'Thanh toán giỏ hàng', cartEmpty: 'Giỏ hàng đang trống.', total: 'Tổng cộng'
+    cart: 'Giỏ hàng', checkout: 'Thanh toán giỏ hàng', cartEmpty: 'Giỏ hàng đang trống.', total: 'Tổng cộng', fullScreen: 'Bật toàn màn hình', exitFullScreen: 'Thoát toàn màn hình'
   }
 };
 
@@ -57,6 +57,7 @@ let currentTopupAmount = 0;
 let userLocker = {};
 let currentLang = 'en';
 let cart = {};
+let isFullscreenPreview = false;
 const TOKEN_TTL_SECONDS = 15;
 const screenHistory = [];
 
@@ -92,6 +93,7 @@ function applyLanguage() {
   el('labelFhub').textContent = t('fhub');
   el('labelCart').textContent = t('cart');
   el('checkoutBtn').textContent = t('checkout');
+  el('fullscreenBtn').textContent = isFullscreenPreview ? t('exitFullScreen') : t('fullScreen');
   el('labelRoomBooking').textContent = t('roomBooking');
   el('labelLibraryQr').textContent = t('libraryQr');
   el('labelStudentQr').textContent = t('studentQr');
@@ -350,6 +352,13 @@ function releaseLocker() {
   showBanner(`Locker ${assigned} released`);
 }
 
+
+function toggleFullscreenPreview() {
+  isFullscreenPreview = !isFullscreenPreview;
+  el('phoneFrame').classList.toggle('fullscreen-mode', isFullscreenPreview);
+  el('fullscreenBtn').textContent = isFullscreenPreview ? t('exitFullScreen') : t('fullScreen');
+}
+
 function showApp() {
   el('loginScreen').classList.add('hidden');
   el('appScreen').classList.remove('hidden');
@@ -359,6 +368,8 @@ function showApp() {
   renderBalance(); renderTransactions(); renderMenu(); renderRooms(); renderCards(); renderLockerUser(); renderLockerMap();
   generatePayToken(); generateTopupQr(); startTokenTimer();
   applyLanguage();
+  isFullscreenPreview = false;
+  el('phoneFrame').classList.remove('fullscreen-mode');
   cart = {};
   screenHistory.length = 0;
   showScreen('homeScreen');
@@ -367,6 +378,8 @@ function showApp() {
 function logout() {
   currentStudent = null;
   cart = {};
+  isFullscreenPreview = false;
+  el('phoneFrame').classList.remove('fullscreen-mode');
   if (timer) clearInterval(timer);
   el('appScreen').classList.add('hidden');
   el('loginScreen').classList.remove('hidden');
@@ -398,6 +411,7 @@ el('lockerStatusBtn').addEventListener('click', () => showScreen('lockerMapScree
 
 el('languageSelect').addEventListener('change', (e) => { currentLang = e.target.value; applyLanguage(); });
 el('darkToggle').addEventListener('change', (e) => el('appScreen').classList.toggle('dark-mode', e.target.checked));
+el('fullscreenBtn').addEventListener('click', toggleFullscreenPreview);
 el('checkoutBtn').addEventListener('click', checkoutCart);
 
 el('chargeBtn').addEventListener('click', () => {
