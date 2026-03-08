@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="FTU seal">
+  <defs>
+    <path id="topArc" d="M58,256a198,198 0 1,1 396,0"/>
+    <path id="botArc" d="M454,256a198,198 0 1,1 -396,0"/>
+    <style>
+      .r{fill:#c8102e}.w{fill:#fff}
+      text{font-family:Arial,Helvetica,sans-serif;font-weight:700;letter-spacing:.8px}
+    </style>
+  </defs>
+  <circle class="r" cx="256" cy="256" r="250"/>
+  <circle class="w" cx="256" cy="256" r="228"/>
+  <circle class="r" cx="256" cy="256" r="216"/>
+  <circle class="w" cx="256" cy="256" r="182"/>
+  <circle class="r" cx="256" cy="256" r="172"/>
+
+  <text class="w" font-size="40">
+    <textPath href="#topArc" startOffset="50%" text-anchor="middle">TRƯỜNG ĐẠI HỌC NGOẠI THƯƠNG</textPath>
+  </text>
+  <text class="w" font-size="34">
+    <textPath href="#botArc" startOffset="50%" text-anchor="middle">FOREIGN TRADE UNIVERSITY</textPath>
+  </text>
+
+  <g class="w" transform="translate(142 142)">
+    <path d="M12 18h96v26H38v148H12z"/>
+    <path d="M102 56h136v26h-104v20h92v26h-92v56h-32z"/>
+    <path d="M238 100h30v84c0 28-23 50-50 50h-84c-28 0-50-22-50-50v-38h30v36c0 12 9 21 21 21h82c12 0 21-9 21-21z"/>
+  </g>
+</svg>

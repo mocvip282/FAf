@@ -1,0 +1,195 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+  <title>FA - FTU App Prototype</title>
+  <meta name="theme-color" content="#c8102e" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="FA FTU" />
+  <link rel="manifest" href="manifest.webmanifest" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <main class="page-bg">
+    <section id="phoneFrame" class="iphone-frame">
+      <div class="dynamic-island"></div>
+      <div id="bannerContainer" class="banner-container"></div>
+
+      <div id="loginScreen" class="login-card">
+        <img src="assets/ftu-seal.svg" class="logo" alt="FTU Logo" />
+        <h1>FA • FTU App</h1>
+        <p>FTU Campus Super App Prototype</p>
+        <input id="studentId" value="2312280041" placeholder="Student ID" />
+        <input id="studentPin" value="1" type="password" placeholder="PIN" />
+        <button id="studentLoginBtn">Sign in Student</button>
+        <button id="installAppBtn" class="secondary-btn hidden">Install app</button>
+        <small id="installHint" class="install-hint hidden"></small>
+      </div>
+
+      <div id="appScreen" class="app-shell hidden">
+        <header>
+          <button class="ghost-btn" id="backBtn">‹</button>
+          <button id="profileBtn" class="profile-bar" title="Personal data">
+            <img src="assets/icons/avatar.svg" class="profile-avatar" alt="Profile" />
+            <div class="profile-meta">
+              <strong id="profileMain">2312280041</strong>
+              <small id="profileSub">Student</small>
+            </div>
+          </button>
+          <button id="settingsBtn" class="settings-btn" title="Settings" aria-label="Settings">
+            <img src="assets/icons/settings.svg" class="settings-icon" alt="" />
+          </button>
+        </header>
+
+        <section id="homeScreen" class="screen">
+          <section class="balance-banner">
+            <p id="labelCampusWallet">Campus Wallet</p>
+            <h2 id="balanceText">0 VND</h2>
+            <span id="studentIdText"></span>
+          </section>
+          <section class="features-grid">
+            <button class="feature-btn minimal" data-target="walletHubScreen"><img class="icon-img" src="assets/icons/wallet.svg" alt="" /><span class="btn-text" id="labelWallet">Wallet</span></button>
+            <button class="feature-btn minimal" data-target="preOrderScreen"><img class="icon-img" src="assets/icons/coffee.svg" alt="" /><span class="btn-text" id="labelPreOrder">Pre-order</span></button>
+            <button class="feature-btn minimal" data-target="roomScreen"><img class="icon-img" src="assets/icons/room.svg" alt="" /><span class="btn-text" id="labelRoom">Room</span></button>
+            <button class="feature-btn minimal" data-target="libraryScreen"><img class="icon-img" src="assets/icons/library.svg" alt="" /><span class="btn-text" id="labelLibrary">Library</span></button>
+            <button class="feature-btn minimal" data-target="idCardScreen"><img class="icon-img" src="assets/icons/id.svg" alt="" /><span class="btn-text" id="labelId">ID</span></button>
+            <button class="feature-btn minimal" data-target="lockerScreen"><img class="icon-img" src="assets/icons/locker.svg" alt="" /><span class="btn-text" id="labelLocker">Locker</span></button>
+          </section>
+        </section>
+
+        <section id="personalScreen" class="screen hidden">
+          <h3 id="labelPersonalData">Personal data</h3>
+          <div class="settings-card">
+            <div class="data-row"><span>Student ID</span><b id="pdStudentId">xxxxxxxxxx</b></div>
+            <div class="data-row"><span>Name</span><b id="pdName">xxxxxxxx</b></div>
+            <div class="data-row"><span>DOB</span><b id="pdDob">xx/xx/xxxx</b></div>
+            <div class="data-row"><span>Class</span><b id="pdClass">xxxxx</b></div>
+            <div class="data-row"><span>Email</span><b id="pdEmail">xxxxx@xxxxx</b></div>
+          </div>
+        </section>
+
+        <section id="settingsScreen" class="screen hidden">
+          <h3 id="labelSettings">Settings</h3>
+          <div class="settings-card">
+            <label for="languageSelect" id="labelLanguage">Language</label>
+            <select id="languageSelect">
+              <option value="en">English</option>
+              <option value="vi">Tiếng Việt</option>
+            </select>
+            <div class="toggle-row">
+              <span id="labelDarkMode">Dark mode</span>
+              <label class="switch">
+                <input type="checkbox" id="darkToggle" />
+                <span class="slider"></span>
+              </label>
+            </div>
+            <button id="installAppBtnSettings" class="secondary-btn hidden">Install app</button>
+            <small id="installHintSettings" class="install-hint hidden"></small>
+          </div>
+          <button id="settingsLogoutBtn" class="logout-wide">Logout</button>
+        </section>
+
+        <section id="walletHubScreen" class="screen hidden">
+          <h3 id="labelWalletTitle">Wallet</h3>
+          <div class="wallet-actions">
+            <button class="feature-btn minimal wallet-action" data-target="payScreen"><img class="icon-img" src="assets/icons/pay.svg" alt="" /><span id="labelPay">Pay</span></button>
+            <button class="feature-btn minimal wallet-action" data-target="receiveScreen"><img class="icon-img" src="assets/icons/receive.svg" alt="" /><span id="labelReceive">Receive</span></button>
+          </div>
+        </section>
+
+        <section id="payScreen" class="screen hidden">
+          <h3 id="labelPayQr">Pay QR</h3>
+          <div id="payQrBox" class="qr-box"></div>
+          <div class="code" id="payCodeText">------</div>
+          <div class="countdown-wrap"><div id="countdownBar" class="countdown"></div></div>
+          <p id="countText">Refresh in 0s</p>
+          <button id="refreshPayBtn">Refresh now</button>
+          <h4 id="labelRecentTx">Recent transactions</h4>
+          <div id="txList" class="tx-list"></div>
+        </section>
+
+        <section id="receiveScreen" class="screen hidden">
+          <h3 id="labelReceiveTitle">Receive</h3>
+          <label id="labelTopupAmount">Top-up amount (VND)</label>
+          <input id="topupAmount" type="number" value="100000" min="1000" step="1000" />
+          <div id="receiveQrBox" class="qr-box"></div>
+          <p id="receiveText" class="sub-text"></p>
+          <button id="generateTopupBtn">Generate new top-up QR</button>
+          <button id="confirmTopupBtn" class="secondary-btn">I paid this QR (demo add balance)</button>
+        </section>
+
+        <section id="preOrderScreen" class="screen hidden">
+          <h3 id="labelFhub">F.HUB Menu</h3>
+          <div id="menuList" class="menu-list"></div>
+          <h4 id="labelCart">Cart</h4>
+          <div id="cartList" class="tx-list"></div>
+          <button id="checkoutBtn">Checkout cart</button>
+        </section>
+
+        <section id="roomScreen" class="screen hidden">
+          <h3 id="labelRoomBooking">Room Booking</h3>
+          <div id="roomList" class="room-list"></div>
+        </section>
+
+        <section id="libraryScreen" class="screen hidden">
+          <h3 id="labelLibraryQr">Library Card QR</h3>
+          <div id="libraryQrBox" class="qr-box secure"></div>
+          <p class="sub-text" id="libraryText"></p>
+        </section>
+
+        <section id="idCardScreen" class="screen hidden">
+          <h3 id="labelStudentQr">Student ID QR</h3>
+          <div id="idQrBox" class="qr-box secure"></div>
+          <p class="sub-text" id="idText"></p>
+        </section>
+
+        <section id="lockerScreen" class="screen hidden">
+          <h3 id="labelLockerControl">Locker Control</h3>
+          <div id="lockerQrBox" class="qr-box"></div>
+          <p id="lockerText" class="sub-text"></p>
+          <button id="openLockerBtn">Scan QR to open locker (demo)</button>
+          <button id="releaseLockerBtn" class="secondary-btn">Release my locker</button>
+          <button id="lockerStatusBtn" class="secondary-btn">View locker status map</button>
+        </section>
+
+        <section id="lockerMapScreen" class="screen hidden">
+          <h3 id="labelLockerStatus">Locker Status (20)</h3>
+          <div id="lockerGrid" class="locker-grid"></div>
+          <p class="sub-text" id="lockerMapHint">Green = available, Red = occupied</p>
+        </section>
+
+        <nav>
+          <button id="homeBtn" class="active">Home</button>
+          <button data-target="walletHubScreen" id="navWallet">Wallet</button>
+        </nav>
+      </div>
+    </section>
+
+    <aside class="merchant-panel">
+      <h3 id="labelMerchantPos">Merchant POS</h3>
+      <p id="labelDemoMerchant">Demo merchant: <b>FTU Canteen A</b></p>
+      <label id="labelService">Service</label>
+      <select id="serviceSelect">
+        <option value="canteen">Canteen</option>
+        <option value="coffee">Coffee</option>
+        <option value="room">Room fee</option>
+        <option value="parking">Parking</option>
+      </select>
+      <label id="labelAmount">Amount (VND)</label>
+      <input id="amountInput" value="35000" />
+      <label id="labelToken">Enter token or 6-digit code</label>
+      <input id="tokenInput" placeholder="token / code" />
+      <button id="chargeBtn">Charge Student Wallet</button>
+      <p class="msg" id="merchantMsg">Waiting...</p>
+    </aside>
+  </main>
+  <script src="app.js"></script>
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => navigator.serviceWorker.register('./sw.js').catch(() => {}));
+    }
+  </script>
+</body>
+</html>
